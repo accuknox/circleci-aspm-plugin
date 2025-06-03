@@ -1,0 +1,4 @@
+description: >
+  Executor for Accuknox SAST scan
+docker:
+  - image: 'accuknox/aspmscanner:v0.8.3' 

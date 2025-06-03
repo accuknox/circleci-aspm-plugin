@@ -1,0 +1,24 @@
+description: >
+  Accuknox SAST Scan
+parameters:
+  SOFT_FAIL:
+    description: "Do not return an error code if there are failed checks"
+    default: true
+    type: boolean
+  PIPELINE_ID:
+    description: "Job ID"
+    default: ""
+    type: string
+  JOB_URL:
+    description: "The URL for the current job"
+    default: ""
+    type: string
+executor: executor
+steps:
+  - checkout
+  - setup_remote_docker:
+      docker_layer_caching: true
+  - sast-scan:
+      SOFT_FAIL: <<parameters.SOFT_FAIL>>
+      PIPELINE_ID: <<parameters.PIPELINE_ID>>
+      JOB_URL: <<parameters.JOB_URL>>

@@ -1,0 +1,30 @@
+description: >
+  Accuknox SAST Scan
+parameters:
+  SOFT_FAIL:
+    description: "Do not return an error code if there are failed checks"
+    default: true
+    type: boolean
+  PIPELINE_ID:
+    description: "Job ID"
+    default: ""
+    type: string
+  JOB_URL:
+    description: "The URL for the current job"
+    default: ""
+    type: string
+steps:
+  - run:
+      name: Run AccuKnox ASPM Scanner
+      environment:
+        SOFT_FAIL: <<parameters.SOFT_FAIL>>
+      command: |
+        SOFT_FAIL="${SOFT_FAIL//[$'\t\r\n ']}"
+        SOFT_FAIL_ARG=""
+        if [ "$SOFT_FAIL" = 1 ]; then
+          SOFT_FAIL_ARG="--softfail"
+        fi
+
+        export PIPELINE_ID="${PIPELINE_ID:-$CIRCLE_BUILD_NUM}"
+        export JOB_URL="${JOB_URL:-$CIRCLE_BUILD_URL}"
+        accuknox-aspm-scanner $SOFT_FAIL_ARG scan sast --pipeline-id "$PIPELINE_ID" --job-url "$JOB_URL"
