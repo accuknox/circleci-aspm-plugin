@@ -53,7 +53,5 @@ steps:
         [ -n "$FRAMEWORK" ] && ARGS="$ARGS --framework \"$FRAMEWORK\""
         [ -n "$BASE_COMMAND" ] && ARGS="$ARGS --base-command \"$BASE_COMMAND\""
 
-        export PIPELINE_ID="${PIPELINE_ID:-$CIRCLE_BUILD_NUM}"
-        export JOB_URL="${JOB_URL:-$CIRCLE_BUILD_URL}"
         eval ./accuknox-aspm-scanner $SOFT_FAIL_ARG scan iac $ARGS
 
