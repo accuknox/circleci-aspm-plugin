@@ -18,7 +18,7 @@ parameters:
 
 steps:
   - run:
-      name: Download AccuKnox ASPM Scanner
+      name: Run AccuKnox ASPM Scanner
       environment:
         IMAGE_NAME: <<parameters.IMAGE_NAME>>
         TAG: <<parameters.TAG>>

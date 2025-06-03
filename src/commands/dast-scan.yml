@@ -18,7 +18,7 @@ parameters:
     type: boolean
 steps:
   - run:
-      name: Run AccuKnox ASPM SAST Scan
+      name: Run AccuKnox ASPM Scanner
       environment:
         TARGET_URL: <<parameters.TARGET_URL>>
         DAST_SCAN_TYPE: <<parameters.DAST_SCAN_TYPE>>

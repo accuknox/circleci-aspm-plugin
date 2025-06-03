@@ -15,7 +15,7 @@ parameters:
     type: boolean
 steps:
   - run:
-      name: Run AccuKnox ASPM SAST Scan
+      name: Run AccuKnox ASPM Scanner
       environment:
         PIPELINE_URL: <<parameters.PIPELINE_URL>>
         SOFT_FAIL: <<parameters.SOFT_FAIL>>
