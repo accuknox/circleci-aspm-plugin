@@ -23,15 +23,6 @@ The following environment variables are required for running AccuKnox scans in C
 | **ACCUKNOX_LABEL** | The label created in AccuKnox SaaS for associating scan results. | N/A (Required) |
 | **ACCUKNOX_TOKEN** | The token for authenticating with the CSPM panel. | N/A (Required) |
 
-#### **SQ SAST-Specific Environment Variables (Required for SonarQube integration)**
-
-| Variable | Description | Default Value |
-| :---- | :---- | :---- |
-| **SONAR_TOKEN** | Token for authenticating with SonarQube. | N/A (Required) |
-| **SONAR_HOST_URL** | The SonarQube host URL. | N/A (Required) |
-| **SONAR_PROJECT_KEY** | The project key in SonarQube. | N/A (Required) |
-| **SONAR_ORG_ID** | Required in case of sonarcloud enterprise. | Optional |
-
 ### **Container Scanning**
 
 The container scanning section of the CI/CD pipeline is designed to integrate with AccuKnox to scan Docker images for security vulnerabilities.
@@ -124,9 +115,6 @@ The **Static Application Security Testing (SAST)** scanning section of the  CI/C
 | Input           | Description                                             | Default Value |
 |----------------|---------------------------------------------------------|---------------|
 | **SOFT_FAIL**   | Do not return an error code if there are failed checks. | `true`        |
-| **PIPELINE_ID** | Job ID of the current CI/CD pipeline.                   | `""`          |
-| **JOB_URL**     | The URL for the current job execution.                  | `""`          |
-
 
 #### **Example**
 
@@ -138,6 +126,45 @@ workflows:
   accuknox:
     jobs:
       - accuknox-scan/sast:
+          SOFT_FAIL: false
+```
+
+Here’s the **SonarQube SAST** section in the same style as your **Static Application Security Testing (SAST)** section, tailored for the `scan sq-sast` command:
+
+---
+
+### **SonarQube Static Application Security Testing (SQ-SAST)**
+
+The **SonarQube SAST** scanning command enables static code analysis using SonarQube or SonarCloud, and can optionally be skipped during pipeline execution.
+
+| Input                 | Description                                             | Default Value |
+| --------------------- | ------------------------------------------------------- | ------------- |
+| **SOFT_FAIL**        | Do not return an error code if there are failed checks. | `true`        |
+| **SKIP_SONAR_SCAN** | If `true`, skips the SonarQube scan entirely.           | `false`       |
+
+#### **Required Environment Variables**
+
+Make sure the following environment variables are set at the project level:
+
+| Variable | Description | Default Value |
+| :---- | :---- | :---- |
+| **SONAR_TOKEN** | Token for authenticating with SonarQube. | N/A (Required) |
+| **SONAR_HOST_URL** | The SonarQube host URL. | N/A (Required) |
+| **SONAR_PROJECT_KEY** | The project key in SonarQube. | N/A (Required) |
+| **SONAR_ORG_ID** | Required in case of sonarcloud enterprise. | Optional |
+
+#### **Example**
+
+```yaml
+version: 2.1
+orbs:
+  accuknox-scan: accuknox-scan/accuknox-test-scan@dev:1.123
+
+workflows:
+  accuknox:
+    jobs:
+      - accuknox-scan/sq-sast:
+          SKIP_SONAR_SCAN: true
           SOFT_FAIL: false
 ```
 
