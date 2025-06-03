@@ -1,0 +1,25 @@
+description: >
+  Accuknox Container Scan
+parameters:
+  IMAGE_NAME:
+    description: "Docker image name"
+    type: string
+  TAG:
+    description: "Docker image tag name"
+    type: string
+  SEVERITY:
+    description: "Comma-separated severities: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
+    default: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
+    type: string
+  SOFT_FAIL:
+    description: "Do not return an error code if there are failed checks"
+    default: true
+    type: boolean
+executor: executor
+steps:
+  - checkout
+  - container-scan:
+      IMAGE_NAME: <<parameters.IMAGE_NAME>>
+      TAG: <<parameters.TAG>>
+      SEVERITY: <<parameters.SEVERITY>>
+      SOFT_FAIL: <<parameters.SOFT_FAIL>>

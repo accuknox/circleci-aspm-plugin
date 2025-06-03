@@ -1,0 +1,38 @@
+description: >
+  Accuknox Container Scan
+parameters:
+  IMAGE_NAME:
+    description: "Docker image name"
+    type: string
+  TAG:
+    description: "Docker image tag name"
+    type: string
+  SEVERITY:
+    description: "Comma-separated severities: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
+    default: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
+    type: string
+  SOFT_FAIL:
+    description: "Do not return an error code if there are failed checks"
+    default: true
+    type: boolean
+
+steps:
+  - run:
+      name: Download AccuKnox ASPM Scanner
+      environment:
+        IMAGE_NAME: <<parameters.IMAGE_NAME>>
+        TAG: <<parameters.TAG>>
+        SEVERITY: <<parameters.SEVERITY>>
+        SOFT_FAIL: <<parameters.SOFT_FAIL>>
+      command: |
+        curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.8.4/accuknox-aspm-scanner_linux_x86_64 -o accuknox-aspm-scanner
+        chmod +x accuknox-aspm-scanner
+
+        SOFT_FAIL="${SOFT_FAIL//[$'\t\r\n ']}"
+        SOFT_FAIL_ARG=""
+        [ "$SOFT_FAIL" = "1" ] && SOFT_FAIL_ARG="--softfail"
+
+        ARGS="--image-name $IMAGE_NAME --tag $TAG"
+        [ -n "$SEVERITY" ] && ARGS="$ARGS --severity $SEVERITY"
+
+        ./accuknox-aspm-scanner $SOFT_FAIL_ARG scan container $ARGS
