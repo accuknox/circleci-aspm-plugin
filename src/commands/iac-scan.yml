@@ -1,0 +1,59 @@
+description: >
+  Accuknox IAC Scan
+parameters:
+  FILE:
+    description: 'Specify a file for scanning; cannot be used with directory input. Filter runners by file type, e.g., ".tf" for Terraform.'
+    default: ""
+    type: string
+  DIRECTORY:
+    description: 'Directory with infrastructure code and/or package manager files to scan'
+    default: "."
+    type: string
+  COMPACT:
+    description: "Do not display code blocks in output"
+    default: true
+    type: boolean
+  QUIET:
+    description: "Display only failed checks"
+    default: true
+    type: boolean
+  SOFT_FAIL:
+    description: "Do not return an error code if there are failed checks"
+    default: true
+    type: boolean
+  FRAMEWORK:
+    description: "Run only on a specific infrastructure, Supported: Kubernetes & Terraform"
+    default: ""
+    type: string
+steps:
+  - run:
+      name: Run AccuKnox ASPM Scanner
+      environment:
+        FILE: <<parameters.FILE>>
+        DIRECTORY: <<parameters.DIRECTORY>>
+        COMPACT: <<parameters.COMPACT>>
+        QUIET: <<parameters.QUIET>>
+        SOFT_FAIL: <<parameters.SOFT_FAIL>>
+        FRAMEWORK: <<parameters.FRAMEWORK>>
+      command: |
+        curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.8.4/accuknox-aspm-scanner_linux_x86_64 -o accuknox-aspm-scanner
+        chmod +x accuknox-aspm-scanner
+
+        SOFT_FAIL="${SOFT_FAIL//[$'\t\r\n ']}"
+        SOFT_FAIL_ARG=""
+        if [ "$SOFT_FAIL" = 1 ]; then
+          SOFT_FAIL_ARG="--softfail"
+        fi
+
+        ARGS=""
+        [ -n "$FILE" ] && ARGS="$ARGS --file \"$FILE\""
+        [ -n "$DIRECTORY" ] && ARGS="$ARGS --directory \"$DIRECTORY\""
+        [ "$COMPACT" = "1" ] && ARGS="$ARGS --compact"
+        [ "$QUIET" = "1" ] && ARGS="$ARGS --quiet"
+        [ -n "$FRAMEWORK" ] && ARGS="$ARGS --framework \"$FRAMEWORK\""
+        [ -n "$BASE_COMMAND" ] && ARGS="$ARGS --base-command \"$BASE_COMMAND\""
+
+        export PIPELINE_ID="${PIPELINE_ID:-$CIRCLE_BUILD_NUM}"
+        export JOB_URL="${JOB_URL:-$CIRCLE_BUILD_URL}"
+        eval ./accuknox-aspm-scanner $SOFT_FAIL_ARG scan iac $ARGS
+
