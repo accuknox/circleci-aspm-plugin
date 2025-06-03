@@ -21,7 +21,7 @@ steps:
         SOFT_FAIL: <<parameters.SOFT_FAIL>>
         SKIP_SONAR_SCAN: <<parameters.SKIP_SONAR_SCAN>>
       command: |
-        curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.8.4/accuknox-aspm-scanner_linux_x86_64 -o accuknox-aspm-scanner
+        curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.8.6/accuknox-aspm-scanner_linux_x86_64 -o accuknox-aspm-scanner
         chmod +x accuknox-aspm-scanner
 
         SOFT_FAIL="${SOFT_FAIL//[$'\t\r\n ']}"
