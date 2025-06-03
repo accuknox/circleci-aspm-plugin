@@ -1,0 +1,26 @@
+description: >
+  AccuKnox DAST Scan
+parameters:
+  TARGET_URL:
+    description: "The URL of the web application to scan."
+    type: string
+  SEVERITY_THRESHOLD:
+    description: "Minimum severity to fail the pipeline (LOW, MEDIUM, HIGH). Default is HIGH."
+    default: "HIGH"
+    type: string
+  DAST_SCAN_TYPE:
+    description: "DAST scan type: baseline or full-scan"
+    default: "baseline"
+    type: string
+  SOFT_FAIL:
+    description: "Do not return an error code if there are failed checks"
+    default: true
+    type: boolean
+executor: executor
+steps:
+  - checkout
+  - dast-scan:
+      TARGET_URL: <<parameters.TARGET_URL>>
+      DAST_SCAN_TYPE: <<parameters.DAST_SCAN_TYPE>>
+      SEVERITY_THRESHOLD: <<parameters.SEVERITY_THRESHOLD>>
+      SOFT_FAIL: <<parameters.SOFT_FAIL>>

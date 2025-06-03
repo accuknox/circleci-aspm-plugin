@@ -31,7 +31,7 @@ steps:
         export PIPELINE_URL="${PIPELINE_URL:-$CIRCLE_BUILD_URL}"
 
         ARGS=""
-        [ "$SKIP_SONAR_SCAN" = "1" ] && ARGS="$ARGS -skip-sonar-scan"
+        [ "$SKIP_SONAR_SCAN" = "1" ] && ARGS="$ARGS --skip-sonar-scan"
         [ -n "$SONAR_PROJECT_KEY" ] && ARGS="$ARGS --sonar-project-key \"$SONAR_PROJECT_KEY\""
         [ -n "$SONAR_TOKEN" ] && ARGS="$ARGS --sonar-token \"$SONAR_TOKEN\""
         [ -n "$SONAR_HOST_URL" ] && ARGS="$ARGS --sonar-host-url \"$SONAR_HOST_URL\""
