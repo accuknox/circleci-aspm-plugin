@@ -19,6 +19,9 @@ steps:
       environment:
         SOFT_FAIL: <<parameters.SOFT_FAIL>>
       command: |
+        curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.8.4/accuknox-aspm-scanner_linux_x86_64 -o accuknox-aspm-scanner
+        chmod +x accuknox-aspm-scanner
+
         SOFT_FAIL="${SOFT_FAIL//[$'\t\r\n ']}"
         SOFT_FAIL_ARG=""
         if [ "$SOFT_FAIL" = 1 ]; then
@@ -27,4 +30,4 @@ steps:
 
         export PIPELINE_ID="${PIPELINE_ID:-$CIRCLE_BUILD_NUM}"
         export JOB_URL="${JOB_URL:-$CIRCLE_BUILD_URL}"
-        accuknox-aspm-scanner $SOFT_FAIL_ARG scan sast --pipeline-id "$PIPELINE_ID" --job-url "$JOB_URL"
+        ./accuknox-aspm-scanner $SOFT_FAIL_ARG scan sast --pipeline-id "$PIPELINE_ID" --job-url "$JOB_URL"

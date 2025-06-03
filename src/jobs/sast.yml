@@ -16,8 +16,6 @@ parameters:
 executor: executor
 steps:
   - checkout
-  - setup_remote_docker:
-      docker_layer_caching: true
   - sast-scan:
       SOFT_FAIL: <<parameters.SOFT_FAIL>>
       PIPELINE_ID: <<parameters.PIPELINE_ID>>

@@ -1,4 +1,4 @@
 description: >
   Executor for Accuknox SAST scan
-docker:
-  - image: 'accuknox/aspmscanner:v0.8.3' 
+machine:
+  image: ubuntu-2404:current
