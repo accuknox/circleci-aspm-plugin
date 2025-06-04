@@ -42,7 +42,7 @@ Here’s the table that outlines the inputs and their descriptions, along with d
 ```
 version: 2.1
 orbs:
-  accuknox-scan: accuknox-scan/accuknox-test-scan@dev:1.125
+  accuknox-scan: scan: accuknox/scan@1.0.0
 workflows:
   accuknox:
     jobs:
@@ -72,7 +72,7 @@ Here is the table that outlines the inputs and their descriptions, along with de
 ```
 version: 2.1
 orbs:
-  accuknox-scan: accuknox-scan/accuknox-test-scan@dev:1.125
+  accuknox-scan: scan: accuknox/scan@1.0.0
 workflows:
   accuknox:
     jobs:
@@ -98,7 +98,7 @@ Here is the table that outlines the inputs and their descriptions, along with de
 ```
 version: 2.1
 orbs:
-  accuknox-scan: accuknox-scan/accuknox-test-scan@dev:1.125
+  accuknox-scan: scan: accuknox/scan@1.0.0
 workflows:
   accuknox:
     jobs:
@@ -122,7 +122,7 @@ The **Static Application Security Testing (SAST)** scanning section of the  CI/C
 ```
 version: 2.1
 orbs:
-  accuknox-scan: accuknox-scan/accuknox-test-scan@dev:1.125
+  accuknox-scan: scan: accuknox/scan@1.0.0
 workflows:
   accuknox:
     jobs:
@@ -159,7 +159,7 @@ Make sure the following environment variables are set at the project level:
 ```yaml
 version: 2.1
 orbs:
-  accuknox-scan: accuknox-scan/accuknox-test-scan@dev:1.125
+  accuknox-scan: scan: accuknox/scan@1.0.0
 
 workflows:
   accuknox:
@@ -188,7 +188,7 @@ Here's the table that outlines the inputs and their descriptions, along with def
 ```yaml
 version: 2.1
 orbs:
-  accuknox-scan: accuknox-scan/accuknox-test-scan@dev:1.125
+  accuknox-scan: scan: accuknox/scan@1.0.0
 workflows:
   accuknox:
     jobs:
