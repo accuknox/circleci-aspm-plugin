@@ -7,6 +7,9 @@ parameters:
   TAG:
     description: "Docker image tag name"
     type: string
+  IMAGE_TAR:
+    description: "Docker image tar file in the artifact"
+    type: string
   SEVERITY:
     description: "Comma-separated severities: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
     default: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
@@ -23,3 +26,4 @@ steps:
       TAG: <<parameters.TAG>>
       SEVERITY: <<parameters.SEVERITY>>
       SOFT_FAIL: <<parameters.SOFT_FAIL>>
+      IMAGE_TAR: <<parameters.IMAGE_TAR>>
