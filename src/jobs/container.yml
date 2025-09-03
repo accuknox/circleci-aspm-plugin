@@ -21,6 +21,8 @@ parameters:
 executor: executor
 steps:
   - checkout
+  - attach_workspace:
+      at: /tmp/workspace
   - container-scan:
       IMAGE_NAME: <<parameters.IMAGE_NAME>>
       TAG: <<parameters.TAG>>

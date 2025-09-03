@@ -29,7 +29,7 @@ steps:
         SOFT_FAIL: <<parameters.SOFT_FAIL>>
         IMAGE_TAR: <<parameters.IMAGE_TAR>>
       command: |
-        docker load -i $IMAGE_TAR
+        docker load -i /tmp/workspace/$IMAGE_TAR
 
         curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.8.6/accuknox-aspm-scanner_linux_x86_64 -o accuknox-aspm-scanner
         chmod +x accuknox-aspm-scanner
