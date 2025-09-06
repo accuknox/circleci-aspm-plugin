@@ -19,7 +19,7 @@ steps:
       environment:
         SOFT_FAIL: <<parameters.SOFT_FAIL>>
       command: |
-        curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.8.6/accuknox-aspm-scanner_linux_x86_64 -o accuknox-aspm-scanner
+        curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.13.0/accuknox-aspm-scanner -o accuknox-aspm-scanner
         chmod +x accuknox-aspm-scanner
 
         SOFT_FAIL="${SOFT_FAIL//[$'\t\r\n ']}"
@@ -39,4 +39,4 @@ steps:
           SOFT_FAIL_ARG="--softfail"
         fi
 
-        ./accuknox-aspm-scanner $SOFT_FAIL_ARG scan sast --pipeline-id "$PIPELINE_ID" --job-url "$JOB_URL" $REPOSITORY_URL_ARG --commit-ref $CIRCLE_BRANCH --commit-sha $CIRCLE_SHA1
+        ./accuknox-aspm-scanner scan $SOFT_FAIL_ARG sast --command "scan ." --pipeline-id "$PIPELINE_ID" --job-url "$JOB_URL" $REPOSITORY_URL_ARG --commit-ref $CIRCLE_BRANCH --commit-sha $CIRCLE_SHA1
