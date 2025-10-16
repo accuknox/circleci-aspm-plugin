@@ -21,20 +21,31 @@ steps:
       name: Run AccuKnox ASPM Scanner
       environment:
         TARGET_URL: <<parameters.TARGET_URL>>
-        DAST_SCAN_TYPE: <<parameters.DAST_SCAN_TYPE>>
         SEVERITY_THRESHOLD: <<parameters.SEVERITY_THRESHOLD>>
+        DAST_SCAN_TYPE: <<parameters.DAST_SCAN_TYPE>>
         SOFT_FAIL: <<parameters.SOFT_FAIL>>
       command: |
-        curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.8.6/accuknox-aspm-scanner_linux_x86_64 -o accuknox-aspm-scanner
-        chmod +x accuknox-aspm-scanner
+        echo "Installing AccuKnox ASPM scanner..."
+        pip install https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.13.4/accuknox_aspm_scanner-0.13.4-py3-none-any.whl --break-system-packages
 
-        SOFT_FAIL="${SOFT_FAIL//[$'\t\r\n ']}"
-        SOFT_FAIL_ARG=""
-        [ "$SOFT_FAIL" = "1" ] && SOFT_FAIL_ARG="--softfail"
+        echo "Running AccuKnox dast scan"
+        mkdir /tmp/scan-dir
+        chmod 777 /tmp/scan-dir
+        cd /tmp/scan-dir
 
-        ARGS="--target-url \"$TARGET_URL\""
-        [ -n "$SEVERITY_THRESHOLD" ] && ARGS="$ARGS --severity-threshold \"$SEVERITY_THRESHOLD\""
-        [ -n "$DAST_SCAN_TYPE" ] && ARGS="$ARGS --dast-scan-type \"$DAST_SCAN_TYPE\""
-
-        echo "Running: accuknox-aspm-scanner $SOFT_FAIL_ARG scan dast $ARGS"
-        eval ./accuknox-aspm-scanner $SOFT_FAIL_ARG scan dast $ARGS
+        if [ "$SOFT_FAIL" = "true" ]; then
+          SOFT_FAIL_ARG="--softfail"
+        fi 
+  
+        # Determine ZAP script based on DAST_SCAN_TYPE
+        if [ "$DAST_SCAN_TYPE" = "full-scan" ]; then
+          ZAP_SCRIPT="zap-full-scan.py"
+        else
+          ZAP_SCRIPT="zap-baseline.py"
+        fi
+        
+        ARGS="$ZAP_SCRIPT -t $TARGET_URL -I"
+        
+        echo accuknox-aspm-scanner scan $SOFT_FAIL_ARG dast --command "$ARGS" --container-mode
+        accuknox-aspm-scanner scan $SOFT_FAIL_ARG dast --command "$ARGS" --container-mode
+        cd -
