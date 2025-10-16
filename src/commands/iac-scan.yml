@@ -36,25 +36,20 @@ steps:
         SOFT_FAIL: <<parameters.SOFT_FAIL>>
         FRAMEWORK: <<parameters.FRAMEWORK>>
       command: |
-        curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.13.1/accuknox-aspm-scanner -o accuknox-aspm-scanner
-        chmod +x accuknox-aspm-scanner
+        echo "Installing AccuKnox ASPM scanner..."
+        pip install https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.13.4/accuknox_aspm_scanner-0.13.4-py3-none-any.whl --break-system-packages
 
-        SOFT_FAIL="${SOFT_FAIL//[$'\t\r\n ']}"
-        SOFT_FAIL_ARG=""
-        if [ "$SOFT_FAIL" = 1 ]; then
+        echo "Running AccuKnox iac scan"
+        if [ "$SOFT_FAIL" = "true" ]; then
           SOFT_FAIL_ARG="--softfail"
         fi
 
         CMD_ARGS=""
         [ -n "$FILE" ] && CMD_ARGS="$CMD_ARGS --file $FILE"
         [ -n "$DIRECTORY" ] && CMD_ARGS="$CMD_ARGS --directory $DIRECTORY"
-        [ "$COMPACT" = "1" ] && CMD_ARGS="$CMD_ARGS --compact"
-        [ "$QUIET" = "1" ] && CMD_ARGS="$CMD_ARGS --quiet"
+        [ "$COMPACT" = "true" ] && CMD_ARGS="$CMD_ARGS --compact"
+        [ "$QUIET" = "true" ] && CMD_ARGS="$CMD_ARGS --quiet"
         [ -n "$FRAMEWORK" ] && CMD_ARGS="$CMD_ARGS --framework $FRAMEWORK"
 
-        if [ -n "$CIRCLE_REPOSITORY_URL" ]; then
-          REPOSITORY_URL_ARG="--repo-url $CIRCLE_REPOSITORY_URL"
-        fi
-
-        echo ./accuknox-aspm-scanner scan $SOFT_FAIL_ARG iac --command "$CMD_ARGS" --container-mode $REPOSITORY_URL_ARG --repo-branch $CIRCLE_BRANCH
-        ./accuknox-aspm-scanner scan $SOFT_FAIL_ARG iac --command "$CMD_ARGS" --container-mode $REPOSITORY_URL_ARG --repo-branch $CIRCLE_BRANCH
+        echo accuknox-aspm-scanner scan $SOFT_FAIL_ARG iac --command "$CMD_ARGS" --container-mode
+        accuknox-aspm-scanner scan $SOFT_FAIL_ARG iac --command "$CMD_ARGS" --container-mode

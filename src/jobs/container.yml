@@ -18,6 +18,14 @@ parameters:
     description: "Do not return an error code if there are failed checks"
     default: true
     type: boolean
+  IMAGE_TAG:
+    description: "Docker image tag (for build)"
+    default: ""
+    type: string
+  IMAGE:
+    description: "Docker image base name (for build)"
+    default: ""
+    type: string
 executor: executor
 steps:
   - checkout
@@ -26,6 +34,8 @@ steps:
   - container-scan:
       IMAGE_NAME: <<parameters.IMAGE_NAME>>
       TAG: <<parameters.TAG>>
+      IMAGE: <<parameters.IMAGE>>
+      IMAGE_TAG: <<parameters.IMAGE_TAG>>
       SEVERITY: <<parameters.SEVERITY>>
       SOFT_FAIL: <<parameters.SOFT_FAIL>>
       IMAGE_TAR: <<parameters.IMAGE_TAR>>

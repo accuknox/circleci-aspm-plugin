@@ -4,6 +4,10 @@ parameters:
   TARGET_URL:
     description: "The URL of the web application to scan."
     type: string
+  DAST_SCAN_SCRIPT:
+    description: "ZAP scan script to use (e.g., zap-baseline.py)"
+    default: "zap-baseline.py"
+    type: string
   SEVERITY_THRESHOLD:
     description: "Minimum severity to fail the pipeline (LOW, MEDIUM, HIGH). Default is HIGH."
     default: "HIGH"
@@ -21,20 +25,27 @@ steps:
       name: Run AccuKnox ASPM Scanner
       environment:
         TARGET_URL: <<parameters.TARGET_URL>>
-        DAST_SCAN_TYPE: <<parameters.DAST_SCAN_TYPE>>
+        DAST_SCAN_SCRIPT: <<parameters.DAST_SCAN_SCRIPT>>
         SEVERITY_THRESHOLD: <<parameters.SEVERITY_THRESHOLD>>
+        DAST_SCAN_TYPE: <<parameters.DAST_SCAN_TYPE>>
         SOFT_FAIL: <<parameters.SOFT_FAIL>>
       command: |
-        curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.8.6/accuknox-aspm-scanner_linux_x86_64 -o accuknox-aspm-scanner
-        chmod +x accuknox-aspm-scanner
+        echo "Installing AccuKnox ASPM scanner..."
+        pip install https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.13.4/accuknox_aspm_scanner-0.13.4-py3-none-any.whl --break-system-packages
 
-        SOFT_FAIL="${SOFT_FAIL//[$'\t\r\n ']}"
-        SOFT_FAIL_ARG=""
-        [ "$SOFT_FAIL" = "1" ] && SOFT_FAIL_ARG="--softfail"
+        echo "Running AccuKnox dast scan"
+        mkdir /tmp/scan-dir
+        chmod 777 /tmp/scan-dir
+        cd /tmp/scan-dir
 
-        ARGS="--target-url \"$TARGET_URL\""
+        if [ "$SOFT_FAIL" = "true" ]; then
+          SOFT_FAIL_ARG="--softfail"
+        fi 
+  
+        ARGS="$DAST_SCAN_SCRIPT -t $TARGET_URL -I "
         [ -n "$SEVERITY_THRESHOLD" ] && ARGS="$ARGS --severity-threshold \"$SEVERITY_THRESHOLD\""
         [ -n "$DAST_SCAN_TYPE" ] && ARGS="$ARGS --dast-scan-type \"$DAST_SCAN_TYPE\""
-
-        echo "Running: accuknox-aspm-scanner $SOFT_FAIL_ARG scan dast $ARGS"
-        eval ./accuknox-aspm-scanner $SOFT_FAIL_ARG scan dast $ARGS
+        
+        echo accuknox-aspm-scanner scan $SOFT_FAIL_ARG dast --command "$ARGS" --container-mode
+        accuknox-aspm-scanner scan $SOFT_FAIL_ARG dast --command "$ARGS" --container-mode
+        cd -

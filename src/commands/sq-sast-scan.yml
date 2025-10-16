@@ -21,8 +21,8 @@ steps:
         SOFT_FAIL: <<parameters.SOFT_FAIL>>
         SKIP_SONAR_SCAN: <<parameters.SKIP_SONAR_SCAN>>
       command: |
-        curl -L https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.13.1/accuknox-aspm-scanner -o accuknox-aspm-scanner
-        chmod +x accuknox-aspm-scanner
+        echo "Installing AccuKnox ASPM scanner..."
+        pip install https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.13.4/accuknox_aspm_scanner-0.13.4-py3-none-any.whl --break-system-packages
 
         SOFT_FAIL="${SOFT_FAIL//[$'\t\r\n ']}"
         SOFT_FAIL_ARG=""
@@ -42,5 +42,5 @@ steps:
 
         CMD_STRING="${ARGS[@]}"
 
-        echo ./accuknox-aspm-scanner scan $SOFT_FAIL_ARG sq-sast --command "${CMD_STRING}" --pipeline-url "$PIPELINE_URL" --container-mode
-        ./accuknox-aspm-scanner scan $SOFT_FAIL_ARG sq-sast --command "${CMD_STRING}" --pipeline-url "$PIPELINE_URL" --container-mode
+        echo accuknox-aspm-scanner scan $SOFT_FAIL_ARG sq-sast --command "${CMD_STRING}" --pipeline-url "$PIPELINE_URL" --container-mode
+        accuknox-aspm-scanner scan $SOFT_FAIL_ARG sq-sast --command "${CMD_STRING}" --pipeline-url "$PIPELINE_URL" --container-mode
