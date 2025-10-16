@@ -40,15 +40,15 @@ steps:
         pip install https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.13.4/accuknox_aspm_scanner-0.13.4-py3-none-any.whl --break-system-packages
 
         echo "Running AccuKnox iac scan"
-        if [ "$SOFT_FAIL" = "true" ]; then
+        if [ "$SOFT_FAIL" = "1" ]; then
           SOFT_FAIL_ARG="--softfail"
         fi
 
         CMD_ARGS=""
         [ -n "$FILE" ] && CMD_ARGS="$CMD_ARGS --file $FILE"
         [ -n "$DIRECTORY" ] && CMD_ARGS="$CMD_ARGS --directory $DIRECTORY"
-        [ "$COMPACT" = "true" ] && CMD_ARGS="$CMD_ARGS --compact"
-        [ "$QUIET" = "true" ] && CMD_ARGS="$CMD_ARGS --quiet"
+        [ "$COMPACT" = "1" ] && CMD_ARGS="$CMD_ARGS --compact"
+        [ "$QUIET" = "1" ] && CMD_ARGS="$CMD_ARGS --quiet"
         [ -n "$FRAMEWORK" ] && CMD_ARGS="$CMD_ARGS --framework $FRAMEWORK"
 
         if [ -n "$CIRCLE_REPOSITORY_URL" ]; then
