@@ -18,3 +18,5 @@ steps:
   - checkout
   - sast-scan:
       SOFT_FAIL: <<parameters.SOFT_FAIL>>
+      PIPELINE_ID: <<parameters.PIPELINE_ID>>
+      JOB_URL: <<parameters.JOB_URL>>

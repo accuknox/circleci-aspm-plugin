@@ -4,10 +4,6 @@ parameters:
   TARGET_URL:
     description: "The URL of the web application to scan."
     type: string
-  DAST_SCAN_SCRIPT:
-    description: "ZAP scan script to use (e.g., zap-baseline.py)"
-    default: "zap-baseline.py"
-    type: string
   SEVERITY_THRESHOLD:
     description: "Minimum severity to fail the pipeline (LOW, MEDIUM, HIGH). Default is HIGH."
     default: "HIGH"
@@ -25,7 +21,6 @@ steps:
   - checkout
   - dast-scan:
       TARGET_URL: <<parameters.TARGET_URL>>
-      DAST_SCAN_SCRIPT: <<parameters.DAST_SCAN_SCRIPT>>
       SEVERITY_THRESHOLD: <<parameters.SEVERITY_THRESHOLD>>
       DAST_SCAN_TYPE: <<parameters.DAST_SCAN_TYPE>>
       SOFT_FAIL: <<parameters.SOFT_FAIL>>

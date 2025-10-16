@@ -4,10 +4,6 @@ parameters:
   TARGET_URL:
     description: "The URL of the web application to scan."
     type: string
-  DAST_SCAN_SCRIPT:
-    description: "ZAP scan script to use (e.g., zap-baseline.py)"
-    default: "zap-baseline.py"
-    type: string
   SEVERITY_THRESHOLD:
     description: "Minimum severity to fail the pipeline (LOW, MEDIUM, HIGH). Default is HIGH."
     default: "HIGH"
@@ -25,7 +21,6 @@ steps:
       name: Run AccuKnox ASPM Scanner
       environment:
         TARGET_URL: <<parameters.TARGET_URL>>
-        DAST_SCAN_SCRIPT: <<parameters.DAST_SCAN_SCRIPT>>
         SEVERITY_THRESHOLD: <<parameters.SEVERITY_THRESHOLD>>
         DAST_SCAN_TYPE: <<parameters.DAST_SCAN_TYPE>>
         SOFT_FAIL: <<parameters.SOFT_FAIL>>
@@ -42,9 +37,14 @@ steps:
           SOFT_FAIL_ARG="--softfail"
         fi 
   
-        ARGS="$DAST_SCAN_SCRIPT -t $TARGET_URL -I "
-        [ -n "$SEVERITY_THRESHOLD" ] && ARGS="$ARGS --severity-threshold \"$SEVERITY_THRESHOLD\""
-        [ -n "$DAST_SCAN_TYPE" ] && ARGS="$ARGS --dast-scan-type \"$DAST_SCAN_TYPE\""
+        # Determine ZAP script based on DAST_SCAN_TYPE
+        if [ "$DAST_SCAN_TYPE" = "full-scan" ]; then
+          ZAP_SCRIPT="zap-full-scan.py"
+        else
+          ZAP_SCRIPT="zap-baseline.py"
+        fi
+        
+        ARGS="$ZAP_SCRIPT -t $TARGET_URL -I"
         
         echo accuknox-aspm-scanner scan $SOFT_FAIL_ARG dast --command "$ARGS" --container-mode
         accuknox-aspm-scanner scan $SOFT_FAIL_ARG dast --command "$ARGS" --container-mode

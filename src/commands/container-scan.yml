@@ -18,14 +18,6 @@ parameters:
   IMAGE_TAR:
     description: "Docker image tar file in the artifact"
     type: string
-  IMAGE:
-    description: "Docker image base name (for build)"
-    default: ""
-    type: string
-  IMAGE_TAG:
-    description: "Docker image tag (for build)"
-    default: ""
-    type: string
 
 steps:
   - run:
@@ -36,16 +28,14 @@ steps:
         SEVERITY: <<parameters.SEVERITY>>
         SOFT_FAIL: <<parameters.SOFT_FAIL>>
         IMAGE_TAR: <<parameters.IMAGE_TAR>>
-        IMAGE: <<parameters.IMAGE>>
-        IMAGE_TAG: <<parameters.IMAGE_TAG>>
       command: |
         echo "Installing AccuKnox ASPM scanner..."
         pip install https://github.com/accuknox/aspm-scanner-cli/releases/download/v0.13.4/accuknox_aspm_scanner-0.13.4-py3-none-any.whl --break-system-packages
 
         echo "Running AccuKnox container scan"
-        if [ -n "$IMAGE" ] && [ -n "$IMAGE_TAG" ]; then
-          docker build -t $IMAGE:$IMAGE_TAG -f Dockerfile .
-          docker save -o $IMAGE_TAR $IMAGE:$IMAGE_TAG
+        if [ -n "$IMAGE_NAME" ] && [ -n "$TAG" ]; then
+          docker build -t $IMAGE_NAME:$TAG -f Dockerfile .
+          docker save -o $IMAGE_TAR $IMAGE_NAME:$TAG
           docker load -i $IMAGE_TAR
         else
           docker load -i /tmp/workspace/$IMAGE_TAR
@@ -54,8 +44,8 @@ steps:
         if [ "$SOFT_FAIL" = "true" ]; then
           SOFT_FAIL_ARG="--softfail"
         fi
-        CMD="image $IMAGE_NAME"
-        [ -n "$IMAGE_TAG" ] && CMD="image $IMAGE:$IMAGE_TAG"
+        CMD="image $IMAGE"
+        [ -n "$TAG" ] && CMD="image $IMAGE_NAME:$TAG"
         [ -n "$SEVERITY" ] && CMD="$CMD --severity $SEVERITY"
         echo accuknox-aspm-scanner scan $SOFT_FAIL_ARG container --command "$CMD" --container-mode
         accuknox-aspm-scanner scan $SOFT_FAIL_ARG container --command "$CMD" --container-mode

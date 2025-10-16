@@ -51,5 +51,9 @@ steps:
         [ "$QUIET" = "true" ] && CMD_ARGS="$CMD_ARGS --quiet"
         [ -n "$FRAMEWORK" ] && CMD_ARGS="$CMD_ARGS --framework $FRAMEWORK"
 
-        echo accuknox-aspm-scanner scan $SOFT_FAIL_ARG iac --command "$CMD_ARGS" --container-mode
-        accuknox-aspm-scanner scan $SOFT_FAIL_ARG iac --command "$CMD_ARGS" --container-mode
+        if [ -n "$CIRCLE_REPOSITORY_URL" ]; then
+          REPOSITORY_URL_ARG="--repo-url $CIRCLE_REPOSITORY_URL"
+        fi
+
+        echo accuknox-aspm-scanner scan $SOFT_FAIL_ARG iac --command "$CMD_ARGS" --container-mode $REPOSITORY_URL_ARG --repo-branch $CIRCLE_BRANCH
+        accuknox-aspm-scanner scan $SOFT_FAIL_ARG iac --command "$CMD_ARGS" --container-mode $REPOSITORY_URL_ARG --repo-branch $CIRCLE_BRANCH
