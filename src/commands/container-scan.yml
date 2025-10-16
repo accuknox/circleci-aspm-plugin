@@ -41,7 +41,7 @@ steps:
           docker load -i /tmp/workspace/$IMAGE_TAR
         fi
 
-        if [ "$SOFT_FAIL" = "true" ]; then
+        if [ "$SOFT_FAIL" = "1" ]; then
           SOFT_FAIL_ARG="--softfail"
         fi
         CMD="image $IMAGE"
